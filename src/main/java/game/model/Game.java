@@ -1,8 +1,8 @@
 package game.model;
 
 import javafx.util.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//mport org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -10,13 +10,13 @@ import java.util.*;
  * Egy játékállapotot reprezentáló osztály.
  */
 public class Game {
-    private static Logger logger = LoggerFactory.getLogger(Game.class);
+    //private static Logger logger = LoggerFactory.getLogger(Game.class);
 
     /**
      * A tábla kezdeti méretét megadó érték.
      */
-    public static final int TABLE_SIZE_X = 8;
-    public static final int TABLE_SIZE_Y = 6;
+    public static final int TABLE_SIZE_X = 6;
+    public static final int TABLE_SIZE_Y = 8;
 
     /**
      * Megmondja, hogy melyik játékos lép következőnek.
@@ -55,12 +55,12 @@ public class Game {
         int pos_1 = rand.nextInt(5);
         int pos_2 = rand.nextInt(5);
 
-        table[0][pos_1] = 1;
-        table[TABLE_SIZE_Y][pos_2] = 2;
+        table[pos_1][0] = 1;
+        table[pos_2][TABLE_SIZE_Y] = 2;
 
         stepCount1 = 0;
         stepCount2 = 0;
-        logger.info("Új játéktábla létrehozva!");
+        //logger.info("Új játéktábla létrehozva!");
     }
 
     /**
@@ -68,7 +68,7 @@ public class Game {
      * @param player
      * @return
      */
-    public Pair getPlayersPosition(int player){
+    private Pair getPlayersPosition(int player){
         int posX = 0;
         int posY = 0;
 
@@ -90,7 +90,7 @@ public class Game {
      * Megnézi, hogy az éppen soron következő játékos léphet-e az adott irányba anélkül,
      * hogy kilépne a játéktábláról.
      */
-    public boolean canPlayerMoveBecauseOfWalls(int direction){
+    private boolean canPlayerMoveBecauseOfWalls(int direction){
         int posX;
         int posY;
 
@@ -104,19 +104,19 @@ public class Game {
 
         if ((posX == 0) && (posY == 0) && ((direction == 1) || (direction == 2) || (direction > 5))){
             return false;
-        } else if ((posX == 0) && (posY == TABLE_SIZE_Y) && (direction > 3)) {
+        } else if ((posX == 0) && (posY == TABLE_SIZE_Y) && ((direction == 8) || (direction < 5))) {
             return false;
-        } else if ((posX == TABLE_SIZE_X) && (posY == 0) && ((direction == 8) || (direction < 5))) {
+        } else if ((posX == TABLE_SIZE_X) && (posY == 0) && (direction < 3)) {
             return false;
         } else if ((posX == TABLE_SIZE_X) && (posY == TABLE_SIZE_Y) && (direction > 1) && (direction < 7)) {
             return false;
-        } else if (((posY == 0) && (posX > 0) && (posX < 7)) && ((direction == 1) || (direction == 2) || (direction == 8))) {
+        } else if (((posY == 0) && (posX > 0) && (posX < 5)) && ((direction == 6) || (direction == 7) || (direction == 8))) {
             return false;
-        } else if (((posX == 0) && (posY > 0) && (posY < 5)) && ((direction > 5) && (direction < 9))) {
+        } else if (((posX == 0) && (posY > 0) && (posY < 7)) && ((direction == 1) || (direction == 2) || (direction == 8))) {
             return false;
-        } else if (((posY == TABLE_SIZE_Y) && (posX > 0) && (posX < 7)) && ((direction == 4) || (direction == 5) || (direction == 6))) {
+        } else if (((posY == TABLE_SIZE_Y) && (posX > 0) && (posX < 5)) && ((direction == 2) || (direction == 3) || (direction == 4))) {
             return false;
-        } else if (((posX == TABLE_SIZE_X) && (posY > 0) && (posY < 5)) && ((direction == 2) || (direction == 3) || (direction == 4))) {
+        } else if (((posX == TABLE_SIZE_X) && (posY > 0) && (posY < 7)) && ((direction == 4) || (direction == 5) || (direction == 6))) {
             return false;
         } else {
             return true;
@@ -127,7 +127,7 @@ public class Game {
      * Megnézi, hogy az éppen soron következő játékos léphet-e az adott irányba anélkül,
      * hogy hogy egy már nem létező mezőre lépne.
      */
-    public boolean canPlayerMoveBecauseOfEmptyPlaces(int direction){
+    private boolean canPlayerMoveBecauseOfLostPlaces(int direction){
         int posX;
         int posY;
 
@@ -141,19 +141,19 @@ public class Game {
 
         if (!canPlayerMoveBecauseOfWalls(direction)) {
             return false;
-        } else if ((direction == 1) && (table[posX][posY - 1] == -1)) {
+        } else if ((direction == 1) && (table[posX - 1][posY] == -1)) {
             return false;
-        } else if ((direction == 2) && (table[posX + 1][posY - 1] == -1)) {
+        } else if ((direction == 2) && (table[posX - 1][posY + 1] == -1)) {
             return false;
-        } else if ((direction == 3) && (table[posX + 1][posY] == -1)) {
+        } else if ((direction == 3) && (table[posX][posY + 1] == -1)) {
             return false;
         } else if ((direction == 4) && (table[posX + 1][posY + 1] == -1)) {
             return false;
-        } else if ((direction == 5) && (table[posX][posY + 1] == -1)) {
+        } else if ((direction == 5) && (table[posX + 1][posY] == -1)) {
             return false;
-        } else if ((direction == 6) && (table[posX - 1][posY + 1] == -1)) {
+        } else if ((direction == 6) && (table[posX + 1][posY - 1] == -1)) {
             return false;
-        } else if ((direction == 7) && (table[posX - 1][posY] == -1)) {
+        } else if ((direction == 7) && (table[posX][posY - 1] == -1)) {
             return false;
         } else if ((direction == 8) && (table[posX - 1][posY - 1] == -1)) {
             return false;
@@ -168,32 +168,45 @@ public class Game {
      * alakítja Pair objektummá, amelyben tárol két adatot, hogy az X és Y tengelyen merre
      * történik a mozgás (-1 hátrafelé, 0 sehová, 1 előrefelé).
      */
-    public Pair directionToPairs(int direction){
+    private Pair directionToPairs(int direction){
         if (direction == 1){
-            Pair pos = new Pair(0, -1);
+            Pair pos = new Pair(-1, 0);
             return pos;
         } else if (direction == 2){
-            Pair pos = new Pair(1, -1);
+            Pair pos = new Pair(-1, 1);
             return pos;
         } else if (direction == 3){
-            Pair pos = new Pair(1, 0);
+            Pair pos = new Pair(0, 1);
             return pos;
         } else if (direction == 4){
             Pair pos = new Pair(1, 1);
             return pos;
         } else if (direction == 5){
-            Pair pos = new Pair(0, 1);
+            Pair pos = new Pair(1, 0);
             return pos;
         } else if (direction == 6){
-            Pair pos = new Pair(-1, 1);
+            Pair pos = new Pair(1, -1);
             return pos;
         } else if (direction == 7){
-            Pair pos = new Pair(-1, 0);
+            Pair pos = new Pair(0, -1);
             return pos;
         } else {
             Pair pos = new Pair(-1, -1);
             return pos;
         }
+    }
+
+    /**
+     * Megvizsgálja, hogy vége-e a játéknak, azaz a soron következő játékos tud-e még hová lépni.
+     */
+    public boolean isThisEndOfGame(){
+        for (int i = 1; i < 8; i++){
+            if ((canPlayerMoveBecauseOfWalls(i)) && canPlayerMoveBecauseOfLostPlaces(i)){
+                return true;
+            }
+        }
+
+         return false;
     }
 
     /**
@@ -217,16 +230,25 @@ public class Game {
             neededPosY = (int) directionToPairs(2).getValue();
         }
 
-        if (canPlayerMoveBecauseOfWalls(direction) || canPlayerMoveBecauseOfEmptyPlaces(direction)){
+        if (canPlayerMoveBecauseOfWalls(direction) && canPlayerMoveBecauseOfLostPlaces(direction)){
             table[currentPosX][currentPosY] = 0;
             if (isFirstPlayer) {
                 table[neededPosX][neededPosY] = 1;
+                stepCount1++;
+                isFirstPlayer = false;
             } else {
                 table[neededPosX][neededPosY] = 2;
+                stepCount2++;
+                isFirstPlayer = true;
             }
+            if (isThisEndOfGame()) throw new IllegalArgumentException();
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public int getTableCell(int row, int column){
+        return table[column][row];
     }
 
 }
