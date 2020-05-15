@@ -1,8 +1,8 @@
 package game.model;
 
 import javafx.util.Pair;
-//mport org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -248,7 +248,7 @@ public class Game {
     }
 
     public int getTableCell(int row, int column){
-        return table[column][row];
+        return table[row][column];
     }
 
 }
