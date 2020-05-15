@@ -217,7 +217,7 @@ public class Game {
             neededPosY = (int) directionToPairs(2).getValue();
         }
 
-        if (canPlayerMoveBecauseOfWalls(direction) || canPlayerMoveBecauseOfEmptyPlaces(direction)){
+        if (canPlayerMoveBecauseOfWalls(direction) && canPlayerMoveBecauseOfEmptyPlaces(direction)){
             table[currentPosX][currentPosY] = 0;
             if (isFirstPlayer) {
                 table[neededPosX][neededPosY] = 1;
