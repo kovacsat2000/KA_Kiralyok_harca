@@ -1,4 +1,4 @@
 module org.project {
     requires javafx.controls;
-    exports org.project;
+    requires slf4j.api;
 }
