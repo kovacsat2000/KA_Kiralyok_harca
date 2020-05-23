@@ -1,8 +1,6 @@
 package game.model;
 
 import javafx.util.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -10,8 +8,6 @@ import java.util.*;
  * Egy játékállapotot reprezentáló osztály.
  */
 public class Game {
-    //private static Logger logger = LoggerFactory.getLogger(Game.class);
-
     /**
      * A tábla kezdeti méretét megadó érték.
      */
@@ -64,7 +60,6 @@ public class Game {
 
         stepCount1 = 0;
         stepCount2 = 0;
-        //logger.info("Új játéktábla létrehozva!");
     }
 
     /**
@@ -232,6 +227,14 @@ public class Game {
     public void setCellDisabled(int x, int y){
         if (table[x][y] == 0)
             table[x][y] = -1;
+    }
+
+    public int getStepCount(){
+        if (isFirstPlayer) {
+            return stepCount1;
+        } else {
+            return stepCount2;
+        }
     }
 
 }
