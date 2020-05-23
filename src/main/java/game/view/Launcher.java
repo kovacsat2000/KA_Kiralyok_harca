@@ -4,6 +4,7 @@ import game.model.Game;
 
 import javafx.application.Application;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
@@ -27,8 +28,6 @@ import java.util.Optional;
 
 public class Launcher extends Application {
     private Stage window;
-
-    private Game game;
 
     private Label stepLabel;
 
@@ -96,6 +95,9 @@ public class Launcher extends Application {
     }
 
     private void showGame() {
+        Game game = new Game();
+        game.initTable();
+
         GridPane gridPane = new GridPane();
         gridPane.setHgap(15);
         gridPane.setVgap(15);
@@ -132,7 +134,10 @@ public class Launcher extends Application {
         Arrow arrow7 = new Arrow(7, game, this);
         Arrow arrow8 = new Arrow(8, game, this);
 
+        Insets inset = new Insets(15);
+
         gridPane3.add(arrow8, 0, 0, 1, 1);
+        gridPane3.setMargin(arrow8, inset);
         gridPane3.add(arrow1, 1, 0, 1, 1);
         gridPane3.add(arrow2, 2, 0, 1, 1);
         gridPane3.add(arrow7, 0, 1, 1, 1);
@@ -140,6 +145,7 @@ public class Launcher extends Application {
         gridPane3.add(arrow6, 0, 2, 1, 1);
         gridPane3.add(arrow5, 1, 2, 1, 1);
         gridPane3.add(arrow4, 2, 2, 1, 1);
+        gridPane3.setMargin(arrow4, inset);
 
         Button exitButton = new Button("Kilépés");
         exitButton.styleProperty().setValue("-fx-background-color: blue; -fx-background-radius: 6, 5");

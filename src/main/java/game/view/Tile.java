@@ -26,14 +26,16 @@ public class Tile extends StackPane {
         border.setFill(null);
         border.setStroke(Color.BLACK);
 
-        int actualTableContent = game.getTableCell(row, column);
-        String numberInCell = String.valueOf(actualTableContent);
         text = new Text();
-        text.setText(numberInCell);
+        text.setText(String.valueOf(game.getTableCell(row, column)));
         text.setFont(Font.font(15));
 
         setAlignment(Pos.CENTER);
         getChildren().addAll(border, text);
+    }
+
+    void updateText() {
+        text.setText(String.valueOf(game.getTableCell(row,column)));
     }
 
 }

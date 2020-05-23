@@ -25,12 +25,6 @@ public class Game {
     private int[][] table = new int[TABLE_SIZE_X][TABLE_SIZE_Y];
 
     /**
-     * Az aktuális játékban a játékosok által megtett lépések száma.
-     */
-    private int stepCount1 = 0;
-    private int stepCount2 = 0;
-
-    /**
      * Paraméter nélküli konstruktor. Üres játékot hoz létre.
      */
     public Game() {
@@ -56,10 +50,7 @@ public class Game {
         int pos_2 = rand.nextInt(5);
 
         table[pos_1][0] = 1;
-        table[pos_2][TABLE_SIZE_Y] = 2;
-
-        stepCount1 = 0;
-        stepCount2 = 0;
+        table[pos_2][TABLE_SIZE_Y - 1] = 2;
     }
 
     /**
@@ -211,11 +202,9 @@ public class Game {
             table[currentPosX][currentPosY] = 0;
             if (isFirstPlayer) {
                 table[currentPosX + neededPosX][currentPosY + neededPosY] = 1;
-                stepCount1++;
                 isFirstPlayer = false;
             } else {
                 table[currentPosX + neededPosX][currentPosY + neededPosY] = 2;
-                stepCount2++;
                 isFirstPlayer = true;
             }
             if (isThisEndOfGame()) throw new IllegalArgumentException();
@@ -228,13 +217,4 @@ public class Game {
         if (table[x][y] == 0)
             table[x][y] = -1;
     }
-
-    public int getStepCount(){
-        if (isFirstPlayer) {
-            return stepCount1;
-        } else {
-            return stepCount2;
-        }
-    }
-
 }
