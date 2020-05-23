@@ -8,7 +8,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.transform.Rotate;
 
 public class Arrow extends StackPane {
-
     Arrow(int direction, Game game, Launcher main) {
         Polygon triangle = new Polygon();
         triangle.getPoints().addAll(0.0, 0.0, 25.0, 0.0, 12.5, 35.0);
@@ -43,6 +42,11 @@ public class Arrow extends StackPane {
 
         setAlignment(Pos.CENTER);
         getChildren().add(triangle);
+
+        setOnMouseClicked(event -> {
+            game.movePlayer(direction);
+            main.updateGame();
+        });
 
     }
 

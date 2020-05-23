@@ -8,6 +8,7 @@ import java.util.*;
  * Egy játékállapotot reprezentáló osztály.
  */
 public class Game {
+
     /**
      * A tábla kezdeti méretét megadó érték.
      */
@@ -17,7 +18,7 @@ public class Game {
     /**
      * Megmondja, hogy melyik játékos lép következőnek.
      */
-    private boolean isFirstPlayer = true;
+    public boolean isFirstPlayer = true;
 
     /**
      * A játéktábla aktuális felállását tároló tömb.
@@ -28,10 +29,6 @@ public class Game {
      * Paraméter nélküli konstruktor. Üres játékot hoz létre.
      */
     public Game() {
-    }
-
-    public int getTableCell(int row, int column){
-        return table[row][column];
     }
 
     /**
@@ -51,6 +48,10 @@ public class Game {
 
         table[pos_1][0] = 1;
         table[pos_2][TABLE_SIZE_Y - 1] = 2;
+    }
+
+    public int getTableCell(int row, int column){
+        return table[row][column];
     }
 
     /**
@@ -129,9 +130,9 @@ public class Game {
         currentPosX = currentPosX + (int) directionToPairs(direction).getKey();
         currentPosY = currentPosY + (int) directionToPairs(direction).getValue();
 
-        if (currentPosX < TABLE_SIZE_X + 1 && currentPosY < TABLE_SIZE_Y + 1){
+        if (currentPosX < TABLE_SIZE_X && currentPosY < TABLE_SIZE_Y){
             return true;
-        } else{
+        } else {
             return false;
         }
 
@@ -156,10 +157,10 @@ public class Game {
         currentPosX = currentPosX + (int) directionToPairs(direction).getKey();
         currentPosY = currentPosY + (int) directionToPairs(direction).getValue();
 
-        if (table[currentPosX][currentPosY] == -1){
-            return false;
-        } else {
+        if (table[currentPosX][currentPosY] == 0){
             return true;
+        } else {
+            return false;
         }
 
     }
@@ -168,13 +169,13 @@ public class Game {
      * Megvizsgálja, hogy vége-e a játéknak, azaz a soron következő játékos tud-e még hová lépni.
      */
     public boolean isThisEndOfGame(){
-        for (int i = 1; i < 8; i++){
+        for (int i = 1; i < 9; i++){
             if ((canPlayerMoveBecauseOfWalls(i)) && canPlayerMoveBecauseOfLostPlaces(i)){
-                return true;
+                return false;
             }
         }
 
-         return false;
+         return true;
     }
 
     /**
@@ -186,16 +187,15 @@ public class Game {
         int neededPosX;
         int neededPosY;
 
+        neededPosX = (int) directionToPairs(direction).getKey();
+        neededPosY = (int) directionToPairs(direction).getValue();
+
         if (isFirstPlayer) {
             currentPosX = (int) getPlayersPosition(1).getKey();
             currentPosY = (int) getPlayersPosition(1).getValue();
-            neededPosX = (int) directionToPairs(1).getKey();
-            neededPosY = (int) directionToPairs(1).getValue();
         } else {
             currentPosX = (int) getPlayersPosition(2).getKey();
             currentPosY = (int) getPlayersPosition(2).getValue();
-            neededPosX = (int) directionToPairs(2).getKey();
-            neededPosY = (int) directionToPairs(2).getValue();
         }
 
         if (canPlayerMoveBecauseOfWalls(direction) && canPlayerMoveBecauseOfLostPlaces(direction)){

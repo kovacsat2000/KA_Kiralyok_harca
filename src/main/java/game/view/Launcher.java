@@ -9,10 +9,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
@@ -31,6 +28,8 @@ public class Launcher extends Application {
 
     private Label stepLabel;
 
+    private Game game;
+
     private List<Tile> tiles = new ArrayList<>();
 
     private Rectangle2D primScreenBounds;
@@ -45,7 +44,7 @@ public class Launcher extends Application {
         GridPane gridPane = new GridPane();
         gridPane.setVgap(10);
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.styleProperty().setValue("-fx-background-color: red");
+        gridPane.styleProperty().setValue("-fx-background-color: cyan");
         Scene scene = new Scene(gridPane,400, 200);
 
         Label entryLabel = new Label("A játék indítása");
@@ -71,7 +70,7 @@ public class Launcher extends Application {
         GridPane gridPane = new GridPane();
         gridPane.setVgap(10);
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.styleProperty().setValue("-fx-background-color: red");
+        gridPane.styleProperty().setValue("-fx-background-color: cyan");
         Scene scene = new Scene(gridPane,800, 400);
 
         Button newGameButton = new Button("Új játék");
@@ -95,14 +94,14 @@ public class Launcher extends Application {
     }
 
     private void showGame() {
-        Game game = new Game();
+        game = new Game();
         game.initTable();
 
         GridPane gridPane = new GridPane();
         gridPane.setHgap(15);
         gridPane.setVgap(15);
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.styleProperty().setValue("-fx-background-color: red");
+        gridPane.styleProperty().setValue("-fx-background-color: cyan");
         Scene scene = new Scene(gridPane, 600, 600);
 
         GridPane gridPane2 = new GridPane();
@@ -113,7 +112,7 @@ public class Launcher extends Application {
         for (int i=0; i < Game.TABLE_SIZE_X; ++i) {
             for (int j = 0; j < Game.TABLE_SIZE_Y; ++j) {
 
-                Tile tile = new Tile(i, j, game);
+                Tile tile = new Tile(i, j, game, this);
                 tiles.add(tile);
                 gridPane2.add(tile, j+1, i+1);
 
@@ -154,6 +153,44 @@ public class Launcher extends Application {
         gridPane.add(gridPane2, 1, 0, 1, 1);
         gridPane.add(gridPane3, 1, 2, 1, 1);
         gridPane.add(exitButton, 0, 3);
+
+        changeScene(scene);
+    }
+
+    private void newGame() {
+        game = new Game();
+        game.initTable();
+        while (game.isThisEndOfGame())
+            game.initTable();
+        showGame();
+    }
+
+    void updateGame() {
+        for (Tile i : tiles) {
+            i.updateCells();
+        }
+        if (game.isThisEndOfGame())
+            endGame();
+    }
+
+    private void endGame() {
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(40);
+        gridPane.setVgap(20);
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.styleProperty().setValue("-fx-background-color: #20B2AA");
+        Scene scene = new Scene(gridPane, 400, 200);
+
+        Button menuButton = new Button("Főmenü");
+        menuButton.styleProperty().setValue("-fx-background-color: #B8860B; -fx-background-radius: 6, 5");
+        menuButton.setOnMouseClicked((event -> showGameMenu()));
+
+        Label winLabel = new Label("A játék véget ért!");
+        GridPane.setHalignment(winLabel, HPos.CENTER);
+        winLabel.setFont(new Font(16));
+
+        gridPane.add(winLabel, 0, 0, 2, 1);
+        gridPane.add(menuButton, 0, 1);
 
         changeScene(scene);
     }
