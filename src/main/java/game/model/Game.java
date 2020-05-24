@@ -8,7 +8,6 @@ import java.util.*;
  * Egy játékállapotot reprezentáló osztály.
  */
 public class Game {
-
     /**
      * A tábla kezdeti méretét megadó érték.
      */
@@ -117,12 +116,16 @@ public class Game {
     }
 
     /**
-     * Megnézi, hogy az éppen soron következő játékos léphet-e az adott irányba anélkül,
-     * hogy kilépne a játéktábláról.
+     * Egy adott irányba lépteti a soron következő játékost.
      */
-    private boolean canPlayerMoveBecauseOfWalls(int direction){
+    public void movePlayer(int direction){
         int currentPosX = 0;
         int currentPosY = 0;
+        int neededPosX = 0;
+        int neededPosY = 0;
+
+        neededPosX = (int) directionToPairs(direction).getKey();
+        neededPosY = (int) directionToPairs(direction).getValue();
 
         if (isFirstPlayer) {
             currentPosX = (int) getPlayersPosition(1).getKey();
@@ -132,22 +135,29 @@ public class Game {
             currentPosY = (int) getPlayersPosition(2).getValue();
         }
 
-        currentPosX = currentPosX + (int) directionToPairs(direction).getKey();
-        currentPosY = currentPosY + (int) directionToPairs(direction).getValue();
-
-        if (currentPosX < TABLE_SIZE_X && currentPosY < TABLE_SIZE_Y){
-            return true;
+        if (currentPosX + neededPosX < 0 || currentPosX + neededPosX > TABLE_SIZE_X - 1){
+            throw new IllegalCallerException();
+        } else if (currentPosY + neededPosY < 0 || currentPosY + neededPosY > TABLE_SIZE_Y - 1){
+            throw new IllegalCallerException();
+        } else if (table[currentPosX+neededPosX][currentPosY+neededPosY] == -1){
+            throw new IllegalCallerException();
+        } else if (isFirstPlayer) {
+            table[currentPosX][currentPosY] = 0;
+            table[currentPosX + neededPosX][currentPosY + neededPosY] = 1;
+            isFirstPlayer = false;
         } else {
-            return false;
+            table[currentPosX][currentPosY] = 0;
+            table[currentPosX + neededPosX][currentPosY + neededPosY] = 2;
+            isFirstPlayer = true;
+            stepCounter++;
         }
 
     }
 
     /**
-     * Megnézi, hogy az éppen soron következő játékos léphet-e az adott irányba anélkül,
-     * hogy hogy egy már nem létező mezőre lépne.
+     * Megvizsgálja, hogy vége-e a játéknak, azaz a soron következő játékos tud-e még hová lépni.
      */
-    private boolean canPlayerMoveBecauseOfLostPlaces(int direction){
+    public boolean isThisEndOfGame(){
         int currentPosX = 0;
         int currentPosY = 0;
         int neededPosX = 0;
@@ -161,69 +171,20 @@ public class Game {
             currentPosY = (int) getPlayersPosition(2).getValue();
         }
 
-        neededPosX = currentPosX + (int) directionToPairs(direction).getKey();
-        neededPosY = currentPosY + (int) directionToPairs(direction).getValue();
-        /*System.out.println(currentPosX);
-        System.out.println(currentPosY);
-        System.out.println(neededPosX);
-        System.out.println(neededPosY);*/
+        for (int i = 1; i <= 8; ++i){
+            neededPosX = (int) directionToPairs(i).getKey();
+            neededPosY = (int) directionToPairs(i).getValue();
 
-        if (table[neededPosX][neededPosY] < 0){
-            return false;
-        } else {
-            return true;
-        }
-
-    }
-
-    /**
-     * Megvizsgálja, hogy vége-e a játéknak, azaz a soron következő játékos tud-e még hová lépni.
-     */
-    public boolean isThisEndOfGame(){
-        for (int i = 1; i <= 8; i++){
-            if (canPlayerMoveBecauseOfLostPlaces(i)){
-                return false;
-            } else if (canPlayerMoveBecauseOfWalls(i)){
-                return false;
+            if (!(currentPosX + neededPosX < 0 || currentPosX + neededPosX > TABLE_SIZE_X - 1)){
+                if (!(currentPosY + neededPosY < 0 || currentPosY + neededPosY > TABLE_SIZE_Y - 1)){
+                    if (!(table[currentPosX+neededPosX][currentPosY+neededPosY] == -1)){
+                        return false;
+                    }
+                }
             }
         }
 
         return true;
-    }
-
-    /**
-     * Egy adott irányba lépteti a soron következő játékost.
-     */
-    public void movePlayer(int direction){
-        int currentPosX;
-        int currentPosY;
-        int neededPosX;
-        int neededPosY;
-
-        neededPosX = (int) directionToPairs(direction).getKey();
-        neededPosY = (int) directionToPairs(direction).getValue();
-
-        if (isFirstPlayer) {
-            currentPosX = (int) getPlayersPosition(1).getKey();
-            currentPosY = (int) getPlayersPosition(1).getValue();
-        } else {
-            currentPosX = (int) getPlayersPosition(2).getKey();
-            currentPosY = (int) getPlayersPosition(2).getValue();
-            stepCounter++;
-        }
-
-        if (canPlayerMoveBecauseOfWalls(direction) && canPlayerMoveBecauseOfLostPlaces(direction)){
-            table[currentPosX][currentPosY] = 0;
-            if (isFirstPlayer) {
-                table[currentPosX + neededPosX][currentPosY + neededPosY] = 1;
-                isFirstPlayer = false;
-            } else {
-                table[currentPosX + neededPosX][currentPosY + neededPosY] = 2;
-                isFirstPlayer = true;
-            }
-        } else {
-            throw new IllegalArgumentException();
-        }
     }
 
     public void setCellDisabled(int x, int y){

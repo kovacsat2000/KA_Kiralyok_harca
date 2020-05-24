@@ -6,6 +6,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.transform.Rotate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Arrow extends StackPane {
     Arrow(int direction, Game game, Launcher main) {
