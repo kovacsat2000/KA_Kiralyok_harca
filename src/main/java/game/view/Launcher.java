@@ -7,11 +7,8 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -27,6 +24,8 @@ public class Launcher extends Application {
     private Stage window;
 
     private Label stepLabel;
+
+    private Label nexPlayerLabel;
 
     private Game game;
 
@@ -88,7 +87,7 @@ public class Launcher extends Application {
         changeScene(scene);
 
         newGameButton.setOnMouseClicked((event -> {
-            showGame();
+            newGame();
         }));
 
     }
@@ -150,9 +149,18 @@ public class Launcher extends Application {
         exitButton.styleProperty().setValue("-fx-background-color: blue; -fx-background-radius: 6, 5");
         exitButton.setOnMouseClicked((event -> showGameMenu()));
 
+        stepLabel = new Label("Aktuális körszám: " + game.getStepCounter());
+        stepLabel.setFont(new Font(20));
+        GridPane.setHalignment(stepLabel, HPos.CENTER);
+        nexPlayerLabel = new Label("Következő játékos: " + game.getIsFirstPlayer());
+        nexPlayerLabel.setFont(new Font(20));
+        GridPane.setHalignment(nexPlayerLabel, HPos.CENTER);
+
         gridPane.add(gridPane2, 1, 0, 1, 1);
         gridPane.add(gridPane3, 1, 2, 1, 1);
         gridPane.add(exitButton, 0, 3);
+        gridPane.add(stepLabel, 0,2);
+        gridPane.add(nexPlayerLabel, 0,1);
 
         changeScene(scene);
     }
@@ -169,6 +177,8 @@ public class Launcher extends Application {
         for (Tile i : tiles) {
             i.updateCells();
         }
+        stepLabel.setText("Aktuális körszám: " + game.getStepCounter());
+        nexPlayerLabel.setText("Következő játékos: " + game.getIsFirstPlayer());
         if (game.isThisEndOfGame())
             endGame();
     }

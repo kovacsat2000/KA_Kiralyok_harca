@@ -25,6 +25,8 @@ public class Game {
      */
     private int[][] table = new int[TABLE_SIZE_X][TABLE_SIZE_Y];
 
+    public int stepCounter = 0;
+
     /**
      * Paraméter nélküli konstruktor. Üres játékot hoz létre.
      */
@@ -105,9 +107,12 @@ public class Game {
         } else if (direction == 7){
             Pair pos = new Pair(0, -1);
             return pos;
-        } else {
+        } else if (direction == 8) {
             Pair pos = new Pair(-1, -1);
             return pos;
+        } else {
+            Pair pos = new Pair(0,0);
+            return  pos;
         }
     }
 
@@ -116,8 +121,8 @@ public class Game {
      * hogy kilépne a játéktábláról.
      */
     private boolean canPlayerMoveBecauseOfWalls(int direction){
-        int currentPosX;
-        int currentPosY;
+        int currentPosX = 0;
+        int currentPosY = 0;
 
         if (isFirstPlayer) {
             currentPosX = (int) getPlayersPosition(1).getKey();
@@ -143,8 +148,10 @@ public class Game {
      * hogy hogy egy már nem létező mezőre lépne.
      */
     private boolean canPlayerMoveBecauseOfLostPlaces(int direction){
-        int currentPosX;
-        int currentPosY;
+        int currentPosX = 0;
+        int currentPosY = 0;
+        int neededPosX = 0;
+        int neededPosY = 0;
 
         if (isFirstPlayer) {
             currentPosX = (int) getPlayersPosition(1).getKey();
@@ -154,13 +161,17 @@ public class Game {
             currentPosY = (int) getPlayersPosition(2).getValue();
         }
 
-        currentPosX = currentPosX + (int) directionToPairs(direction).getKey();
-        currentPosY = currentPosY + (int) directionToPairs(direction).getValue();
+        neededPosX = currentPosX + (int) directionToPairs(direction).getKey();
+        neededPosY = currentPosY + (int) directionToPairs(direction).getValue();
+        /*System.out.println(currentPosX);
+        System.out.println(currentPosY);
+        System.out.println(neededPosX);
+        System.out.println(neededPosY);*/
 
-        if (table[currentPosX][currentPosY] == 0){
-            return true;
-        } else {
+        if (table[neededPosX][neededPosY] < 0){
             return false;
+        } else {
+            return true;
         }
 
     }
@@ -169,13 +180,15 @@ public class Game {
      * Megvizsgálja, hogy vége-e a játéknak, azaz a soron következő játékos tud-e még hová lépni.
      */
     public boolean isThisEndOfGame(){
-        for (int i = 1; i < 9; i++){
-            if ((canPlayerMoveBecauseOfWalls(i)) && canPlayerMoveBecauseOfLostPlaces(i)){
+        for (int i = 1; i <= 8; i++){
+            if (canPlayerMoveBecauseOfLostPlaces(i)){
+                return false;
+            } else if (canPlayerMoveBecauseOfWalls(i)){
                 return false;
             }
         }
 
-         return true;
+        return true;
     }
 
     /**
@@ -196,6 +209,7 @@ public class Game {
         } else {
             currentPosX = (int) getPlayersPosition(2).getKey();
             currentPosY = (int) getPlayersPosition(2).getValue();
+            stepCounter++;
         }
 
         if (canPlayerMoveBecauseOfWalls(direction) && canPlayerMoveBecauseOfLostPlaces(direction)){
@@ -207,7 +221,6 @@ public class Game {
                 table[currentPosX + neededPosX][currentPosY + neededPosY] = 2;
                 isFirstPlayer = true;
             }
-            if (isThisEndOfGame()) throw new IllegalArgumentException();
         } else {
             throw new IllegalArgumentException();
         }
@@ -216,5 +229,15 @@ public class Game {
     public void setCellDisabled(int x, int y){
         if (table[x][y] == 0)
             table[x][y] = -1;
+    }
+
+    public int getStepCounter(){
+        return stepCounter;
+    }
+
+    public int getIsFirstPlayer(){
+        if (isFirstPlayer)
+            return 1;
+        else return 2;
     }
 }
