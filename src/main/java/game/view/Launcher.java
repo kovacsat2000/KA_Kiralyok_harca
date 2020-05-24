@@ -24,7 +24,7 @@ public class Launcher extends Application {
 
     private Label stepLabel;
 
-    private Label nexPlayerLabel;
+    private Label nextPlayerLabel;
 
     private Game game;
 
@@ -151,15 +151,16 @@ public class Launcher extends Application {
         stepLabel = new Label("Aktuális körszám: " + game.getStepCounter());
         stepLabel.setFont(new Font(20));
         GridPane.setHalignment(stepLabel, HPos.CENTER);
-        nexPlayerLabel = new Label("Következő játékos: " + game.getIsFirstPlayer());
-        nexPlayerLabel.setFont(new Font(20));
-        GridPane.setHalignment(nexPlayerLabel, HPos.CENTER);
+        System.out.println(game.getIsFirstPlayer());
+        nextPlayerLabel = new Label("Következő játékos: " + game.getIsFirstPlayer());
+        nextPlayerLabel.setFont(new Font(20));
+        GridPane.setHalignment(nextPlayerLabel, HPos.CENTER);
 
         gridPane.add(gridPane2, 1, 0, 1, 1);
         gridPane.add(gridPane3, 1, 2, 1, 1);
         gridPane.add(exitButton, 0, 3);
         gridPane.add(stepLabel, 0,2);
-        gridPane.add(nexPlayerLabel, 0,1);
+        gridPane.add(nextPlayerLabel, 0,1);
 
         changeScene(scene);
     }
@@ -177,7 +178,12 @@ public class Launcher extends Application {
             i.updateCells();
         }
         stepLabel.setText("Aktuális körszám: " + game.getStepCounter());
-        nexPlayerLabel.setText("Következő játékos: " + game.getIsFirstPlayer());
+        System.out.println(game.getIsFirstPlayer());
+        if (game.getIsFirstPlayer() == 0){
+            nextPlayerLabel.setText("Válassz egy mezőt!");
+        } else {
+            nextPlayerLabel.setText("Következő játékos: " + game.getIsFirstPlayer());
+        }
         if (game.isThisEndOfGame())
             endGame();
     }
@@ -194,9 +200,14 @@ public class Launcher extends Application {
         menuButton.styleProperty().setValue("-fx-background-color: #B8860B; -fx-background-radius: 6, 5");
         menuButton.setOnMouseClicked((event -> showGameMenu()));
 
-        Label winLabel = new Label("A játék véget ért!");
+        Label winLabel = new Label();
+        if (game.getIsFirstPlayer() == 1){
+            winLabel.setText("A játék véget ért! A győztes a 2. játékos");
+        } else {
+            winLabel.setText("A játék véget ért! A győztes az 1. játékos");
+        }
         GridPane.setHalignment(winLabel, HPos.CENTER);
-        winLabel.setFont(new Font(16));
+        winLabel.setFont(new Font(15));
 
         gridPane.add(winLabel, 0, 0, 2, 1);
         gridPane.add(menuButton, 0, 1);

@@ -110,19 +110,20 @@ public class Game {
             throw new IllegalCallerException();
         } else if (table[currentPosX+neededPosX][currentPosY+neededPosY] == -1){
             throw new IllegalCallerException();
-        } else if (isFirstPlayer) {
-            table[currentPosX][currentPosY] = 0;
-            table[currentPosX + neededPosX][currentPosY + neededPosY] = 1;
-            isFirstPlayer = false;
-            wasACellDisabled = false;
-        } else {
-            table[currentPosX][currentPosY] = 0;
-            table[currentPosX + neededPosX][currentPosY + neededPosY] = 2;
-            isFirstPlayer = true;
-            stepCounter++;
-            wasACellDisabled = false;
+        } else if (wasACellDisabled){
+            if (isFirstPlayer){
+                table[currentPosX][currentPosY] = 0;
+                table[currentPosX + neededPosX][currentPosY + neededPosY] = 1;
+                isFirstPlayer = false;
+                wasACellDisabled = false;
+            } else {
+                table[currentPosX][currentPosY] = 0;
+                table[currentPosX + neededPosX][currentPosY + neededPosY] = 2;
+                isFirstPlayer = true;
+                stepCounter++;
+                wasACellDisabled = false;
+            }
         }
-
     }
 
     public boolean isThisEndOfGame(){
@@ -168,8 +169,12 @@ public class Game {
     }
 
     public int getIsFirstPlayer(){
-        if (isFirstPlayer)
-            return 1;
-        else return 2;
+        if (wasACellDisabled) {
+            if (isFirstPlayer)
+                return 1;
+            else return 2;
+        }
+
+        return 0;
     }
 }
