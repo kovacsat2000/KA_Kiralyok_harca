@@ -19,6 +19,8 @@ public class Game {
      */
     public boolean isFirstPlayer = true;
 
+    public boolean wasACellDisabled = true;
+
     /**
      * A játéktábla aktuális felállását tároló tömb.
      */
@@ -145,11 +147,13 @@ public class Game {
             table[currentPosX][currentPosY] = 0;
             table[currentPosX + neededPosX][currentPosY + neededPosY] = 1;
             isFirstPlayer = false;
+            wasACellDisabled = false;
         } else {
             table[currentPosX][currentPosY] = 0;
             table[currentPosX + neededPosX][currentPosY + neededPosY] = 2;
             isFirstPlayer = true;
             stepCounter++;
+            wasACellDisabled = false;
         }
 
     }
@@ -188,8 +192,11 @@ public class Game {
     }
 
     public void setCellDisabled(int x, int y){
-        if (table[x][y] == 0)
-            table[x][y] = -1;
+        if (!wasACellDisabled){
+            if (table[x][y] == 0)
+                table[x][y] = -1;
+            wasACellDisabled = true;
+        }
     }
 
     public int getStepCounter(){
