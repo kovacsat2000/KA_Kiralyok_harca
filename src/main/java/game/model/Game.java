@@ -4,40 +4,21 @@ import javafx.util.Pair;
 
 import java.util.*;
 
-/**
- * Egy játékállapotot reprezentáló osztály.
- */
 public class Game {
-    /**
-     * A tábla kezdeti méretét megadó érték.
-     */
     public static final int TABLE_SIZE_X = 6;
     public static final int TABLE_SIZE_Y = 8;
 
-    /**
-     * Megmondja, hogy melyik játékos lép következőnek.
-     */
     public boolean isFirstPlayer = true;
 
     public boolean wasACellDisabled = true;
 
-    /**
-     * A játéktábla aktuális felállását tároló tömb.
-     */
     private int[][] table = new int[TABLE_SIZE_X][TABLE_SIZE_Y];
 
     public int stepCounter = 0;
 
-    /**
-     * Paraméter nélküli konstruktor. Üres játékot hoz létre.
-     */
     public Game() {
     }
 
-    /**
-     * Egy kezdeti játéktábla inicializálása.
-     * A létrejövő tábla {@code TABLE_SIZE_X x TABLE_SIZE_Y} méretű lesz.
-     */
     public void initTable() {
         for (int i = 0; i < TABLE_SIZE_X; ++i) {
             for (int j = 0; j < TABLE_SIZE_Y; ++j) {
@@ -57,11 +38,6 @@ public class Game {
         return table[row][column];
     }
 
-    /**
-     * A játékos poziciójának, annak koordinátáinak a lekérdezése.
-     * @param player
-     * @return
-     */
     private Pair getPlayersPosition(int player){
         int posX = 0;
         int posY = 0;
@@ -80,12 +56,6 @@ public class Game {
         return pos;
     }
 
-    /**
-     * A számok szerint tárolt lépésirányokat
-     * (1: fel, 2: fel-jobbra, 3: jobbra, 4: le-jobbra, 5: le, 6: le-balra, 7: balra, 8: fel-balra)
-     * alakítja Pair objektummá, amelyben tárol két adatot, hogy az X és Y tengelyen merre
-     * történik a mozgás (-1 hátrafelé, 0 sehová, 1 előrefelé).
-     */
     private Pair directionToPairs(int direction){
         if (direction == 1){
             Pair pos = new Pair(-1, 0);
@@ -117,9 +87,6 @@ public class Game {
         }
     }
 
-    /**
-     * Egy adott irányba lépteti a soron következő játékost.
-     */
     public void movePlayer(int direction){
         int currentPosX = 0;
         int currentPosY = 0;
@@ -158,9 +125,6 @@ public class Game {
 
     }
 
-    /**
-     * Megvizsgálja, hogy vége-e a játéknak, azaz a soron következő játékos tud-e még hová lépni.
-     */
     public boolean isThisEndOfGame(){
         int currentPosX = 0;
         int currentPosY = 0;
