@@ -45,8 +45,10 @@ public class Launcher extends Application {
         gridPane.styleProperty().setValue("-fx-background-color: cyan");
         Scene scene = new Scene(gridPane,400, 200);
 
-        Label entryLabel = new Label("A játék indítása");
+        Label entryLabel = new Label("A játék indítása: ");
+        entryLabel.setFont(new Font(15));
         Label gameLabel = new Label("Királyok harca\nKészítő: Kovács Attila Patrik\nVerzió: 1.0");
+        gameLabel.setFont(new Font(12));
 
         Button startButton = new Button("Start");
 
@@ -131,21 +133,19 @@ public class Launcher extends Application {
         Arrow arrow7 = new Arrow(7, game, this);
         Arrow arrow8 = new Arrow(8, game, this);
 
-        Insets inset = new Insets(15);
-
-        gridPane3.add(arrow8, 0, 0, 1, 1);
-        gridPane3.setMargin(arrow8, inset);
         gridPane3.add(arrow1, 1, 0, 1, 1);
         gridPane3.add(arrow2, 2, 0, 1, 1);
-        gridPane3.add(arrow7, 0, 1, 1, 1);
         gridPane3.add(arrow3, 2, 1, 1, 1);
-        gridPane3.add(arrow6, 0, 2, 1, 1);
-        gridPane3.add(arrow5, 1, 2, 1, 1);
         gridPane3.add(arrow4, 2, 2, 1, 1);
-        gridPane3.setMargin(arrow4, inset);
+        gridPane3.add(arrow5, 1, 2, 1, 1);
+        gridPane3.add(arrow6, 0, 2, 1, 1);
+        gridPane3.add(arrow7, 0, 1, 1, 1);
+        gridPane3.add(arrow8, 0, 0, 1, 1);
+        gridPane3.setMargin(arrow4, new Insets(15));
+        gridPane3.setMargin(arrow8, new Insets(15));
 
         Button exitButton = new Button("Kilépés");
-        exitButton.styleProperty().setValue("-fx-background-color: blue; -fx-background-radius: 6, 5");
+        exitButton.styleProperty().setValue("-fx-background-color: red; -fx-background-radius: 6, 5");
         exitButton.setOnMouseClicked((event -> showGameMenu()));
 
         stepLabel = new Label("Aktuális körszám: " + game.getStepCounter());
