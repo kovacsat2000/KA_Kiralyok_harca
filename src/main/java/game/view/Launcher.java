@@ -6,39 +6,68 @@ import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import com.google.gson.*;
 import org.tinylog.Logger;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * Királyok harca játék felhasználói felületét megvalósító osztály.
+ */
 public class Launcher extends Application {
+    /**
+     * A felhasználói felület ablakának azonosítója.
+     */
     private Stage window;
 
+    /**
+     * A lépések számát megjelenítő szöveg azonosítója.
+     */
     private Label stepLabel;
 
+    /**
+     * A soron következő játékost megjelenítő szöveg azonosítója.
+     */
     private Label nextPlayerLabel;
 
+    /**
+     * A játék egy példánya.
+     */
     private Game game;
 
+    /**
+     * A megjelenített játéktábla cellái.
+     */
     private List<Tile> tiles = new ArrayList<>();
 
-    private Rectangle2D primScreenBounds;
+    /**
+     * A JSON műveletek támogató objektum.
+     */
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+    /**
+     * A felhasználói felület ablakának frissítése.
+     *
+     * @param scene aktuális tartalom
+     */
     private void changeScene(Scene scene) {
         window.setScene(scene);
-        window.setX((primScreenBounds.getWidth() - window.getWidth()) / 2);
-        window.setY((primScreenBounds.getHeight() - window.getHeight()) / 2);
     }
 
+    /**
+     * A kezdeti panel megjelenítése.
+     */
     private void showEntryPanel() {
         GridPane gridPane = new GridPane();
         gridPane.setVgap(10);
@@ -67,6 +96,20 @@ public class Launcher extends Application {
 
     }
 
+    /**
+     * Kiírja .json fileba a pillanatnyi játékállást.
+     */
+    private void saveGameState(){
+        try (FileWriter writer = new FileWriter(System.getProperty("user.home") + File.separator + "saves.json")) {
+            gson.toJson(game.getTable(), writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * A menü panel megjelenítése.
+     */
     private void showGameMenu() {
         GridPane gridPane = new GridPane();
         gridPane.setVgap(10);
@@ -79,6 +122,13 @@ public class Launcher extends Application {
 
         Button loadGameButton = new Button("Játék betöltése");
         loadGameButton.styleProperty().setValue("-fx-background-color: green; -fx-background-radius: 6, 5");
+        loadGameButton.setOnMouseClicked((event -> {
+            try {
+                loadGame();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }));
 
         Button quitGameButton = new Button("Játék bezárása");
         quitGameButton.styleProperty().setValue("-fx-background-color: red; -fx-background-radius: 6, 5");
@@ -104,10 +154,10 @@ public class Launcher extends Application {
         Logger.debug("A felhasználói felület tartalma megváltozott!");
     }
 
+    /**
+     * Az aktuális játék megjelenítése új ablakban.
+     */
     private void showGame() {
-        game = new Game();
-        game.initTable();
-
         GridPane gridPane = new GridPane();
         gridPane.setHgap(15);
         gridPane.setVgap(15);
@@ -157,7 +207,10 @@ public class Launcher extends Application {
 
         Button exitButton = new Button("Kilépés");
         exitButton.styleProperty().setValue("-fx-background-color: red; -fx-background-radius: 6, 5");
-        exitButton.setOnMouseClicked((event -> showGameMenu()));
+        exitButton.setOnMouseClicked((event -> {
+            saveGameState();
+            showGameMenu();
+        }));
 
         stepLabel = new Label("Aktuális körszám: " + game.getStepCounter());
         stepLabel.setFont(new Font(20));
@@ -177,15 +230,31 @@ public class Launcher extends Application {
         Logger.debug("A felhasználói felület tartalma megváltozott!");
     }
 
+    /**
+     * Betölt egy elmentett játékot.
+     */
+    private void loadGame() throws FileNotFoundException {
+        game = new Game();
+        game.loadTable();
+        showGame();
+
+        Logger.info("Játék betöltésre került!");
+    }
+
+    /**
+     * Új játék kezdése.
+     */
     private void newGame() {
         game = new Game();
-        while (game.isThisEndOfGame())
-            game.initTable();
+        game.initTable();
         showGame();
 
         Logger.info("Új játék kezdődött!");
     }
 
+    /**
+     * Aktuális játékfelület frissítése.
+     */
     void updateGame() {
         for (Tile i : tiles) {
             i.updateCells();
@@ -206,6 +275,11 @@ public class Launcher extends Application {
         Logger.debug("Az aktuális játékállás frissült.");
     }
 
+    /**
+     * A játék végét jelző panel. Akkor hívódik meg, ha valaki veszített.
+     *
+     * @param stepCount
+     */
     private void endGame(int stepCount) {
         Logger.info("A játék sikeresen véget ért! Körök száma: {}.", stepCount);
 
@@ -240,18 +314,25 @@ public class Launcher extends Application {
         Logger.debug("A felhasználói felület tartalma megváltozott!");
     }
 
+    /**
+     * A felhasználói felület megjelenítése.
+     *
+     * @param stage a felhasználói felület ablak azonosítója
+     */
     @Override
     public void start(Stage stage) {
         window = stage;
-        primScreenBounds = Screen.getPrimary().getVisualBounds();
 
         showEntryPanel();
-        window.setTitle("Tábla kirakó játék");
+        window.setTitle("Királyok harca");
         window.show();
-        window.setX((primScreenBounds.getWidth() - window.getWidth()) / 2);
-        window.setY((primScreenBounds.getHeight() - window.getHeight()) / 2);
     }
 
+    /**
+     * Az alkalmazás belépési pontja. A játék indításakor hívódik meg.
+     *
+     * @param args bemenő paraméterek
+     */
     public static void main(String[] args) {
         launch(args);
     }

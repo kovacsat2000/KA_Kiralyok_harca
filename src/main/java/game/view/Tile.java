@@ -7,13 +7,33 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
+/**
+ * A felhasználói felület játékbeli celláit megvalósító osztály.
+ */
 public class Tile extends StackPane {
+    /**
+     * A reprezentált cella sor indexe.
+     */
     private int row;
 
+    /**
+     * A reprezentált cella oszlop indexe.
+     */
     private int column;
 
+    /**
+     * A játék egy példánya.
+     */
     private Game game;
 
+    /**
+     * Cella létrehozására szolgáló konstruktor.
+     *
+     * @param row a reprezentált játékcella sora
+     * @param column a reprezentált játékcella oszlopa
+     * @param game a játék példánya
+     * @param main a felhasználói felület példánya
+     */
     Tile(int row, int column, Game game, Launcher main) {
         this.row = row;
         this.column = column;
@@ -48,6 +68,9 @@ public class Tile extends StackPane {
         });
     }
 
+    /**
+     * Frissíti a játékcella tartalmát.
+     */
     void updateCells() {
         Rectangle border = new Rectangle(30, 30);
         if (game.getTableCell(row, column) == 1){

@@ -8,7 +8,17 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
+/**
+ * A felhasználói felület játékvezérlő nyilait megvalósító osztály.
+ */
 public class Arrow extends StackPane {
+    /**
+     * Nyíl létrehozására szolgáló konstruktor.
+     *
+     * @param direction a nyíl iránya
+     * @param game a játék példánya
+     * @param main a felhasználói felület példánya
+     */
     Arrow(int direction, Game game, Launcher main) {
         Polygon triangle = new Polygon();
         triangle.getPoints().addAll(0.0, 0.0, 25.0, 0.0, 12.5, 35.0);
@@ -49,7 +59,7 @@ public class Arrow extends StackPane {
                 game.movePlayer(direction);
                 main.updateGame();
             } catch (IllegalCallerException e){
-                Logger.warn("Válasszon mezőt!");
+                Logger.warn("Vegyen le egy mezőt!");
             }
             catch (Exception IllegalArgumentException){
                 Logger.warn("Ide nem léphet!");
