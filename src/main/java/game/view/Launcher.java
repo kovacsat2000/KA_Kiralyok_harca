@@ -15,6 +15,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +43,7 @@ public class Launcher extends Application {
         GridPane gridPane = new GridPane();
         gridPane.setVgap(10);
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.styleProperty().setValue("-fx-background-color: cyan");
+        gridPane.styleProperty().setValue("-fx-background-color: DimGray");
         Scene scene = new Scene(gridPane,400, 200);
 
         Label entryLabel = new Label("A játék indítása: ");
@@ -70,7 +71,7 @@ public class Launcher extends Application {
         GridPane gridPane = new GridPane();
         gridPane.setVgap(10);
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.styleProperty().setValue("-fx-background-color: cyan");
+        gridPane.styleProperty().setValue("-fx-background-color: GoldenRod");
         Scene scene = new Scene(gridPane,800, 400);
 
         Button newGameButton = new Button("Új játék");
@@ -79,11 +80,15 @@ public class Launcher extends Application {
         Button loadGameButton = new Button("Játék betöltése");
         loadGameButton.styleProperty().setValue("-fx-background-color: green; -fx-background-radius: 6, 5");
 
+        Button quitGameButton = new Button("Játék bezárása");
+        quitGameButton.styleProperty().setValue("-fx-background-color: red; -fx-background-radius: 6, 5");
+
         GridPane.setHalignment(newGameButton, HPos.CENTER);
         GridPane.setHalignment(loadGameButton, HPos.CENTER);
 
         gridPane.add(newGameButton, 0, 1);
         gridPane.add(loadGameButton, 0, 2);
+        gridPane.add(quitGameButton, 0, 3);
 
         changeScene(scene);
 
@@ -91,6 +96,12 @@ public class Launcher extends Application {
             newGame();
         }));
 
+        quitGameButton.setOnMouseClicked((event -> {
+            window.close();
+            Logger.debug("A felhasználó kilépett a játékból.");
+        }));
+
+        Logger.debug("A felhasználói felület tartalma megváltozott!");
     }
 
     private void showGame() {
@@ -101,7 +112,7 @@ public class Launcher extends Application {
         gridPane.setHgap(15);
         gridPane.setVgap(15);
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.styleProperty().setValue("-fx-background-color: cyan");
+        gridPane.styleProperty().setValue("-fx-background-color: DarkSeaGreen");
         Scene scene = new Scene(gridPane, 600, 600);
 
         GridPane gridPane2 = new GridPane();
@@ -151,7 +162,6 @@ public class Launcher extends Application {
         stepLabel = new Label("Aktuális körszám: " + game.getStepCounter());
         stepLabel.setFont(new Font(20));
         GridPane.setHalignment(stepLabel, HPos.CENTER);
-        System.out.println(game.getIsFirstPlayer());
         nextPlayerLabel = new Label("Következő játékos: " + game.getIsFirstPlayer());
         nextPlayerLabel.setFont(new Font(20));
         GridPane.setHalignment(nextPlayerLabel, HPos.CENTER);
@@ -163,14 +173,17 @@ public class Launcher extends Application {
         gridPane.add(nextPlayerLabel, 0,1);
 
         changeScene(scene);
+
+        Logger.debug("A felhasználói felület tartalma megváltozott!");
     }
 
     private void newGame() {
         game = new Game();
-        game.initTable();
         while (game.isThisEndOfGame())
             game.initTable();
         showGame();
+
+        Logger.info("Új játék kezdődött!");
     }
 
     void updateGame() {
@@ -178,22 +191,25 @@ public class Launcher extends Application {
             i.updateCells();
         }
         stepLabel.setText("Aktuális körszám: " + game.getStepCounter());
-        System.out.println(game.getIsFirstPlayer());
         if (game.getIsFirstPlayer() == 0){
             nextPlayerLabel.setText("Válassz egy mezőt!");
         } else {
             nextPlayerLabel.setText("Következő játékos: " + game.getIsFirstPlayer());
         }
         if (game.isThisEndOfGame())
-            endGame();
+            endGame(game.getStepCounter());
+
+        Logger.debug("Az aktuális játékállás frissült.");
     }
 
-    private void endGame() {
+    private void endGame(int stepCount) {
+        Logger.info("A játék sikeresen véget ért! Körök száma: {}.", stepCount);
+
         GridPane gridPane = new GridPane();
         gridPane.setHgap(40);
         gridPane.setVgap(20);
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.styleProperty().setValue("-fx-background-color: #20B2AA");
+        gridPane.styleProperty().setValue("-fx-background-color: DarkMagenta");
         Scene scene = new Scene(gridPane, 400, 200);
 
         Button menuButton = new Button("Főmenü");
@@ -209,10 +225,15 @@ public class Launcher extends Application {
         GridPane.setHalignment(winLabel, HPos.CENTER);
         winLabel.setFont(new Font(15));
 
+        Label stepLabel = new Label();
+        stepLabel.setText("A játék során megtett körök száma: " + stepCount);
+
         gridPane.add(winLabel, 0, 0, 2, 1);
         gridPane.add(menuButton, 0, 1);
 
         changeScene(scene);
+
+        Logger.debug("A felhasználói felület tartalma megváltozott!");
     }
 
     @Override
@@ -225,7 +246,6 @@ public class Launcher extends Application {
         window.show();
         window.setX((primScreenBounds.getWidth() - window.getWidth()) / 2);
         window.setY((primScreenBounds.getHeight() - window.getHeight()) / 2);
-
     }
 
     public static void main(String[] args) {

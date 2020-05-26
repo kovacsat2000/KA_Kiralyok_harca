@@ -1,6 +1,7 @@
 package game.model;
 
 import javafx.util.Pair;
+import org.tinylog.Logger;
 
 import java.util.*;
 
@@ -32,6 +33,7 @@ public class Game {
 
         table[pos_1][0] = 1;
         table[pos_2][TABLE_SIZE_Y - 1] = 2;
+        Logger.info("Új játéktábla létrehozva.");
     }
 
     public int getTableCell(int row, int column){
@@ -116,6 +118,7 @@ public class Game {
                 table[currentPosX + neededPosX][currentPosY + neededPosY] = 1;
                 isFirstPlayer = false;
                 wasACellDisabled = false;
+                Logger.info("Az első játékos lépett a(z) {} irányba.", direction);
             } else {
                 table[currentPosX][currentPosY] = 0;
                 table[currentPosX + neededPosX][currentPosY + neededPosY] = 2;
@@ -147,12 +150,14 @@ public class Game {
             if (!(currentPosX + neededPosX < 0 || currentPosX + neededPosX > TABLE_SIZE_X - 1)){
                 if (!(currentPosY + neededPosY < 0 || currentPosY + neededPosY > TABLE_SIZE_Y - 1)){
                     if (!(table[currentPosX+neededPosX][currentPosY+neededPosY] == -1)){
+                        Logger.debug("Az aktuális játékállás még nem végállapot.");
                         return false;
                     }
                 }
             }
         }
 
+        Logger.debug("Az aktuális játékállás végállapot.");
         return true;
     }
 
