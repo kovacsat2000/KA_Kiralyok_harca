@@ -267,7 +267,7 @@ public class Launcher extends Application {
         } else if (game.getIsFirstPlayer() == 1) {
             nextPlayerLabel.setText("Következő játékos: " + "fehér");
         } else {
-            nextPlayerLabel.setText("Következő játékos: " + "kék");
+            nextPlayerLabel.setText("Következő játékos: " + "fekete");
         }
         if (game.isThisEndOfGame())
             endGame(game.getStepCounter());

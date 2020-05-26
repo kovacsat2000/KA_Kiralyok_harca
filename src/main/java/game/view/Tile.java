@@ -43,7 +43,7 @@ public class Tile extends StackPane {
         if (game.getTableCell(row, column) == 1){
             border.setFill(Color.WHITE);
         } else if (game.getTableCell(row, column) == 2){
-            border.setFill(Color.DARKBLUE);
+            border.setFill(Color.BLACK);
         } else if (game.getTableCell(row, column) == 0){
             border.setFill(Color.GREENYELLOW);
         } else {
@@ -76,7 +76,7 @@ public class Tile extends StackPane {
         if (game.getTableCell(row, column) == 1){
             border.setFill(Color.WHITE);
         } else if (game.getTableCell(row, column) == 2){
-            border.setFill(Color.DARKBLUE);
+            border.setFill(Color.BLACK);
         } else if (game.getTableCell(row, column) == 0){
             border.setFill(Color.GREENYELLOW);
         } else {
