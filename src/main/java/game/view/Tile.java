@@ -5,15 +5,12 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import org.tinylog.Logger;
 
 public class Tile extends StackPane {
     private int row;
 
     private int column;
-
-    private Text text;
 
     private Game game;
 
@@ -34,21 +31,24 @@ public class Tile extends StackPane {
         }
         border.setStroke(Color.BLACK);
 
-        //text = new Text();
-        //text.setText(String.valueOf(game.getTableCell(row,column)));
-        //text.setFont(Font.font(15));
-
         setAlignment(Pos.CENTER);
         getChildren().addAll(border);
 
         setOnMouseClicked(event -> {
-            game.setCellDisabled(row, column);
-            main.updateGame();
+            try {
+                game.setCellDisabled(row, column);
+                main.updateGame();
+            }
+            catch (IllegalCallerException e){
+                Logger.warn("Ez a mező már piros!");
+            }
+            catch (Exception IllegalArgumentException){
+                Logger.warn("Előbb lépnie kell!");
+            }
         });
     }
 
     void updateCells() {
-        //text.setText(String.valueOf(game.getTableCell(row, column)));
         Rectangle border = new Rectangle(30, 30);
         if (game.getTableCell(row, column) == 1){
             border.setFill(Color.WHITE);

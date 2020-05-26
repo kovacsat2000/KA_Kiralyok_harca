@@ -107,11 +107,13 @@ public class Game {
         }
 
         if (currentPosX + neededPosX < 0 || currentPosX + neededPosX > TABLE_SIZE_X - 1){
-            throw new IllegalCallerException();
+            throw new IllegalArgumentException();
         } else if (currentPosY + neededPosY < 0 || currentPosY + neededPosY > TABLE_SIZE_Y - 1){
-            throw new IllegalCallerException();
+            throw new IllegalArgumentException();
+        } else if (table[currentPosX+neededPosX][currentPosY+neededPosY] == 1 || table[currentPosX+neededPosX][currentPosY+neededPosY] == 2){
+            throw new IllegalArgumentException();
         } else if (table[currentPosX+neededPosX][currentPosY+neededPosY] == -1){
-            throw new IllegalCallerException();
+            throw new IllegalArgumentException();
         } else if (wasACellDisabled){
             if (isFirstPlayer){
                 table[currentPosX][currentPosY] = 0;
@@ -123,10 +125,10 @@ public class Game {
                 table[currentPosX][currentPosY] = 0;
                 table[currentPosX + neededPosX][currentPosY + neededPosY] = 2;
                 isFirstPlayer = true;
-                stepCounter++;
                 wasACellDisabled = false;
+                Logger.info("A második játékos lépett a(z) {} irányba.", direction);
             }
-        }
+        } else throw new IllegalCallerException();
     }
 
     public boolean isThisEndOfGame(){
@@ -163,10 +165,14 @@ public class Game {
 
     public void setCellDisabled(int x, int y){
         if (!wasACellDisabled){
-            if (table[x][y] == 0)
+            if (table[x][y] == 0){
                 table[x][y] = -1;
-            wasACellDisabled = true;
-        }
+                wasACellDisabled = true;
+                stepCounter++;
+            } else if (table[x][y] == -1){
+                throw new IllegalCallerException();
+            }
+        } else throw new IllegalArgumentException();
     }
 
     public int getStepCounter(){

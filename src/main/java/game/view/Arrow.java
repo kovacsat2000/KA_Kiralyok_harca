@@ -6,6 +6,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.transform.Rotate;
+import org.tinylog.Logger;
 
 public class Arrow extends StackPane {
     Arrow(int direction, Game game, Launcher main) {
@@ -44,8 +45,15 @@ public class Arrow extends StackPane {
         getChildren().add(triangle);
 
         setOnMouseClicked(event -> {
-            game.movePlayer(direction);
-            main.updateGame();
+            try {
+                game.movePlayer(direction);
+                main.updateGame();
+            } catch (IllegalCallerException e){
+                Logger.warn("Válasszon mezőt!");
+            }
+            catch (Exception IllegalArgumentException){
+                Logger.warn("Ide nem léphet!");
+            }
         });
 
     }

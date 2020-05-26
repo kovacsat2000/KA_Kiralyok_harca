@@ -190,7 +190,9 @@ public class Launcher extends Application {
         for (Tile i : tiles) {
             i.updateCells();
         }
-        stepLabel.setText("Aktuális körszám: " + game.getStepCounter());
+        if (game.getStepCounter()%2 == 0){
+            stepLabel.setText("Aktuális körszám: " + game.getStepCounter()/2);
+        }
         if (game.getIsFirstPlayer() == 0){
             nextPlayerLabel.setText("Válassz egy mezőt!");
         } else if (game.getIsFirstPlayer() == 1) {
