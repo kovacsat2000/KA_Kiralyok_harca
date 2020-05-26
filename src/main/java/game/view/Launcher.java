@@ -162,7 +162,7 @@ public class Launcher extends Application {
         stepLabel = new Label("Aktuális körszám: " + game.getStepCounter());
         stepLabel.setFont(new Font(20));
         GridPane.setHalignment(stepLabel, HPos.CENTER);
-        nextPlayerLabel = new Label("Következő játékos: " + game.getIsFirstPlayer());
+        nextPlayerLabel = new Label("Következő játékos: " + "fehér");
         nextPlayerLabel.setFont(new Font(20));
         GridPane.setHalignment(nextPlayerLabel, HPos.CENTER);
 
@@ -193,8 +193,10 @@ public class Launcher extends Application {
         stepLabel.setText("Aktuális körszám: " + game.getStepCounter());
         if (game.getIsFirstPlayer() == 0){
             nextPlayerLabel.setText("Válassz egy mezőt!");
+        } else if (game.getIsFirstPlayer() == 1) {
+            nextPlayerLabel.setText("Következő játékos: " + "fehér");
         } else {
-            nextPlayerLabel.setText("Következő játékos: " + game.getIsFirstPlayer());
+            nextPlayerLabel.setText("Következő játékos: " + "kék");
         }
         if (game.isThisEndOfGame())
             endGame(game.getStepCounter());
