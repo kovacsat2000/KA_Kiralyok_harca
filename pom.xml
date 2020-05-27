@@ -16,8 +16,9 @@
         <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
         <exec.cleanupDaemonThreads>false</exec.cleanupDaemonThreads>
         <dependency.locations.enabled>false</dependency.locations.enabled>
-        <jdbi.version>3.12.2</jdbi.version>
-        <exec.mainClass>org.project.App</exec.mainClass>
+        <exec.mainClass>game.Main</exec.mainClass>
+        <additionalparam>-Xdoclint:none</additionalparam>
+        <url>https://github.com/kovacsat2000/KA_Kiralyok_harca</url>
     </properties>
 
     <scm>
@@ -95,15 +96,6 @@
             </plugin>
 
             <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.1</version>
-                <configuration>
-                    <mainClass>${exec.mainClass}</mainClass>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
@@ -120,33 +112,25 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.9.0</version>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.1</version>
                 <configuration>
-                    <validate>
-                        true
-                    </validate>
+                    <mainClass>${exec.mainClass}</mainClass>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>com.github.johnpoth</groupId>
-                <artifactId>jshell-maven-plugin</artifactId>
-                <version>1.2</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>8.19</version>
-                    </dependency>
-                </dependencies>
             </plugin>
 
             <plugin>
@@ -172,23 +156,33 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M3</version>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
             </plugin>
 
             <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.2</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <configuration>
+                    <argLine>--add-opens game.model/game.model=ALL-UNNAMED</argLine>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
                 <executions>
                     <execution>
+                        <phase>test</phase>
                         <goals>
-                            <goal>prepare-agent</goal>
+                            <goal>resources</goal>
+                            <goal>testResources</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
 
     </build>
@@ -197,16 +191,21 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <excludes>**/module-info.java</excludes>
+                </configuration>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.0</version>
                 <configuration>
-                    <configLocation>checkstyle.xml</configLocation>
+                    <show>package</show>
+                    <source>8</source>
                 </configuration>
             </plugin>
 
@@ -227,7 +226,7 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.2</version>
             </plugin>
-
         </plugins>
     </reporting>
+
 </project>

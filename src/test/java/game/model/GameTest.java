@@ -1,19 +1,13 @@
 package game.model;
 
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class GameTest {
+public class GameTest {
     @Test
-    void testInitTable() {
+    public void testInitTable() {
         Game game = new Game();
         game.initTable();
 
@@ -28,7 +22,7 @@ class GameTest {
     }
 
     @Test
-    void testIsThisEndOfGame() {
+    public void testIsThisEndOfGame() {
         assertTrue(new Game(new int[][] {
                 {1, -1, 0, 0, 0, 0, 0, 0},
                 {-1, -1, 0, 0, 0, 0, 0, 0},
@@ -59,7 +53,7 @@ class GameTest {
     }
 
     @Test
-    void testGetTableCell() {
+    public void testGetTableCell() {
         Game game = new Game(new int[][] {
                 {1, 0, 0, 0, 0, 0, 0, 0},
                 {-1, -1, 0, 0, 0, 0, 0, 0},
@@ -76,7 +70,7 @@ class GameTest {
     }
 
     @Test
-    void testGetPlayersPosition() {
+    public void testGetPlayersPosition() {
         Game game = new Game();
         game.initTable();
 
@@ -92,7 +86,7 @@ class GameTest {
     }
 
     @Test
-    void testMovePlayer() {
+    public void testMovePlayer() {
         Game game1 = new Game(new int[][] {
                 {1, 0, 0, 0, 0, 0, 0, 0},
                 {-1, -1, 0, 0, 0, 0, 0, 0},
@@ -126,7 +120,7 @@ class GameTest {
     }
 
     @Test
-    void testDirectionToPairs() {
+    public void testDirectionToPairs() {
         Game game = new Game();
 
         Pair pos = new Pair(0, 0);
@@ -150,7 +144,7 @@ class GameTest {
     }
 
     @Test
-    void testSetCellDisabled() {
+    public void testSetCellDisabled() {
         int row = 5;
         int column = 2;
 
@@ -180,7 +174,7 @@ class GameTest {
     }
 
     @Test
-    void testGetIsFirstPlayer() {
+    public void testGetIsFirstPlayer() {
         Game game = new Game();
 
         game.isFirstPlayer = true;

@@ -15,9 +15,13 @@ import java.util.*;
  */
 public class Game {
     /**
-     * A tábla hosszúsága és szélessége.
+     * A tábla hosszúsága.
      */
     public static final int TABLE_SIZE_X = 6;
+
+    /**
+     * A tábla szélessége.
+     */
     public static final int TABLE_SIZE_Y = 8;
 
     /**
@@ -72,7 +76,7 @@ public class Game {
 
     /**
      * A json fileból tölti be a játéktáblát.
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException ha nem talál fájlt
      */
     public void loadTable() throws FileNotFoundException {
         Gson gson = new Gson();
@@ -98,7 +102,7 @@ public class Game {
     }
 
     /**
-     * A jelenlegi játéktábla lekérdezése
+     * A jelenlegi játéktábla lekérdezése.
      * @return játéktábla
      */
     public int[][] getTable(){
@@ -108,8 +112,8 @@ public class Game {
     /**
      * Bemenetként kap egy játékost, és visszaad egy párt, ami a játékos helye a táblán.
      *
-     * @param player
-     * @return Pair
+     * @param player kapot játékos, 1 vagy 2
+     * @return Pair visszaadott pár, x és y koordináta
      */
     public Pair getPlayersPosition(int player){
         int posX = 0;
@@ -133,8 +137,8 @@ public class Game {
      * Egy irányt kap bemenetként, ami 1-8 közötti lehet. Ebből visszaad egy párt, ami egy x és y, -1, 0 vagy 1,
      * ami jelzi, hogy az adott tengelyen mennyit kell halandni.
      *
-     * @param direction
-     * @return Pair
+     * @param direction a 8 irány közül egy, számmal jelölve
+     * @return Pair visszaadott pár, x és y koordináta
      */
     public Pair directionToPairs(int direction){
         if (direction == 1){
@@ -171,7 +175,7 @@ public class Game {
      * Egy irányt kap bemenetként, ami 1-8 közötti lehet. Eldönti, hogy a játékos, aki éppen lép,
      * léphet-e a kívánt irányba, és ha igen, akkor lépteti a játékost.
      *
-     * @param direction
+     * @param direction a 8 irány közül egy, számmal jelölve
      */
     public void movePlayer(int direction){
         int currentPosX = 0;
