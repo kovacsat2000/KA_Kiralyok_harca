@@ -1,7 +1,6 @@
 package game.model;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import javafx.util.Pair;
 import org.tinylog.Logger;
@@ -9,7 +8,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -49,6 +47,15 @@ public class Game {
     }
 
     /**
+     * Játék létrehozása előre megadott játéktábla felállással.
+     *
+     * @param table a kezdeti játéktábla
+     */
+    public Game(int[][] table) {
+        this.table = table;
+    }
+
+    /**
      * Egy kezdeti játéktábla inicializálása.
      */
     public void initTable() {
@@ -58,12 +65,8 @@ public class Game {
             }
         }
 
-        Random rand = new Random();
-        int pos_1 = rand.nextInt(5);
-        int pos_2 = rand.nextInt(5);
-
-        table[pos_1][0] = 1;
-        table[pos_2][TABLE_SIZE_Y - 1] = 2;
+        table[2][0] = 1;
+        table[3][TABLE_SIZE_Y - 1] = 2;
         Logger.info("Új játéktábla létrehozva.");
     }
 
@@ -108,7 +111,7 @@ public class Game {
      * @param player
      * @return Pair
      */
-    private Pair getPlayersPosition(int player){
+    public Pair getPlayersPosition(int player){
         int posX = 0;
         int posY = 0;
 
@@ -133,7 +136,7 @@ public class Game {
      * @param direction
      * @return Pair
      */
-    private Pair directionToPairs(int direction){
+    public Pair directionToPairs(int direction){
         if (direction == 1){
             Pair pos = new Pair(-1, 0);
             return pos;
@@ -261,6 +264,7 @@ public class Game {
                 table[x][y] = -1;
                 wasACellDisabled = true;
                 stepCounter++;
+                Logger.info("A pálya {} sorának {} oszlopa eltüntetve.", x + 1, y + 1);
             } else if (table[x][y] == -1){
                 throw new IllegalCallerException();
             }
