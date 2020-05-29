@@ -2,6 +2,7 @@ package game.view;
 
 import game.model.Game;
 
+import game.model.GameH;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -46,10 +47,14 @@ public class Launcher extends Application {
      */
     private Game game;
 
+    private GameH gameH;
+
     /**
      * A megjelenített játéktábla cellái.
      */
     private List<Tile> tiles = new ArrayList<>();
+
+    private List<TileH> tilesH = new ArrayList<>();
 
     /**
      * A JSON műveletek támogató objektum.
@@ -117,8 +122,11 @@ public class Launcher extends Application {
         gridPane.styleProperty().setValue("-fx-background-color: GoldenRod");
         Scene scene = new Scene(gridPane,800, 400);
 
-        Button newGameButton = new Button("Új játék");
+        Button newGameButton = new Button("1 v. 1");
         newGameButton.styleProperty().setValue("-fx-background-color: green; -fx-background-radius: 6, 5");
+
+        Button newGameHButton = new Button("Játék gép ellen");
+        newGameHButton.styleProperty().setValue("-fx-background-color: green; -fx-background-radius: 6, 5");
 
         Button loadGameButton = new Button("Játék betöltése");
         loadGameButton.styleProperty().setValue("-fx-background-color: green; -fx-background-radius: 6, 5");
@@ -136,14 +144,19 @@ public class Launcher extends Application {
         GridPane.setHalignment(newGameButton, HPos.CENTER);
         GridPane.setHalignment(loadGameButton, HPos.CENTER);
 
-        gridPane.add(newGameButton, 0, 1);
-        gridPane.add(loadGameButton, 0, 2);
-        gridPane.add(quitGameButton, 0, 3);
+        gridPane.add(newGameHButton, 0, 1);
+        gridPane.add(newGameButton, 0, 2);
+        gridPane.add(loadGameButton, 0, 3);
+        gridPane.add(quitGameButton, 0, 4);
 
         changeScene(scene);
 
         newGameButton.setOnMouseClicked((event -> {
             newGame();
+        }));
+
+        newGameHButton.setOnMouseClicked((event -> {
+            newGameH();
         }));
 
         quitGameButton.setOnMouseClicked((event -> {
@@ -230,6 +243,69 @@ public class Launcher extends Application {
         Logger.debug("A felhasználói felület tartalma megváltozott!");
     }
 
+    private void showGameH() {
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(15);
+        gridPane.setVgap(15);
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.styleProperty().setValue("-fx-background-color: DarkSeaGreen");
+        Scene scene = new Scene(gridPane, 600, 600);
+
+        GridPane gridPane2 = new GridPane();
+        gridPane2.setHgap(12);
+        gridPane2.setVgap(12);
+        gridPane2.setAlignment(Pos.CENTER);
+
+        for (int i=0; i < GameH.TABLE_SIZE_X; ++i) {
+            for (int j = 0; j < GameH.TABLE_SIZE_Y; ++j) {
+
+                TileH tileH = new TileH(i, j, gameH, this);
+                tilesH.add(tileH);
+                gridPane2.add(tileH, j+1, i+1);
+
+            }
+        }
+
+        GridPane gridPane3 = new GridPane();
+        gridPane3.setHgap(5);
+        gridPane3.setVgap(5);
+        gridPane3.setAlignment(Pos.CENTER);
+
+        ArrowH arrow1 = new ArrowH(1, gameH, this);
+        ArrowH arrow2 = new ArrowH(2, gameH, this);
+        ArrowH arrow3 = new ArrowH(3, gameH, this);
+        ArrowH arrow4 = new ArrowH(4, gameH, this);
+        ArrowH arrow5 = new ArrowH(5, gameH, this);
+        ArrowH arrow6 = new ArrowH(6, gameH, this);
+        ArrowH arrow7 = new ArrowH(7, gameH, this);
+        ArrowH arrow8 = new ArrowH(8, gameH, this);
+
+        gridPane3.add(arrow1, 1, 0, 1, 1);
+        gridPane3.add(arrow2, 2, 0, 1, 1);
+        gridPane3.add(arrow3, 2, 1, 1, 1);
+        gridPane3.add(arrow4, 2, 2, 1, 1);
+        gridPane3.add(arrow5, 1, 2, 1, 1);
+        gridPane3.add(arrow6, 0, 2, 1, 1);
+        gridPane3.add(arrow7, 0, 1, 1, 1);
+        gridPane3.add(arrow8, 0, 0, 1, 1);
+        gridPane3.setMargin(arrow4, new Insets(15));
+        gridPane3.setMargin(arrow8, new Insets(15));
+
+        Button exitButton = new Button("Kilépés");
+        exitButton.styleProperty().setValue("-fx-background-color: red; -fx-background-radius: 6, 5");
+        exitButton.setOnMouseClicked((event -> {
+            showGameMenu();
+        }));
+
+        gridPane.add(gridPane2, 1, 0, 1, 1);
+        gridPane.add(gridPane3, 1, 2, 1, 1);
+        gridPane.add(exitButton, 0, 3);
+
+        changeScene(scene);
+
+        Logger.debug("A felhasználói felület tartalma megváltozott!");
+    }
+
     /**
      * Betölt egy elmentett játékot.
      */
@@ -248,6 +324,14 @@ public class Launcher extends Application {
         game = new Game();
         game.initTable();
         showGame();
+
+        Logger.info("Új játék kezdődött!");
+    }
+
+    private void newGameH() {
+        gameH = new GameH();
+        gameH.initTable();
+        showGameH();
 
         Logger.info("Új játék kezdődött!");
     }
@@ -273,6 +357,22 @@ public class Launcher extends Application {
             endGame(game.getStepCounter());
 
         Logger.debug("Az aktuális játékállás frissült.");
+    }
+
+    void updateGameH() {
+        if (gameH.isThisEndOfGame()){
+            endGameH();
+        } else {
+            if (gameH.wasACellDisabled){
+                gameH.movingEnemy();
+            }
+
+            for (TileH i : tilesH) {
+                i.updateCells();
+            }
+
+            Logger.debug("Az aktuális játékállás frissült.");
+        }
     }
 
     /**
@@ -307,6 +407,25 @@ public class Launcher extends Application {
         stepLabel.setText("A játék során megtett körök száma: " + stepCount);
 
         gridPane.add(winLabel, 0, 0, 2, 1);
+        gridPane.add(menuButton, 0, 1);
+
+        changeScene(scene);
+
+        Logger.debug("A felhasználói felület tartalma megváltozott!");
+    }
+
+    private void endGameH() {
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(40);
+        gridPane.setVgap(20);
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.styleProperty().setValue("-fx-background-color: DarkMagenta");
+        Scene scene = new Scene(gridPane, 400, 200);
+
+        Button menuButton = new Button("Főmenü");
+        menuButton.styleProperty().setValue("-fx-background-color: #B8860B; -fx-background-radius: 6, 5");
+        menuButton.setOnMouseClicked((event -> showGameMenu()));
+
         gridPane.add(menuButton, 0, 1);
 
         changeScene(scene);
