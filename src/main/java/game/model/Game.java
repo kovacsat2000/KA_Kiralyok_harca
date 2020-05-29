@@ -245,8 +245,12 @@ public class Game {
             if (!(currentPosX + neededPosX < 0 || currentPosX + neededPosX > TABLE_SIZE_X - 1)){
                 if (!(currentPosY + neededPosY < 0 || currentPosY + neededPosY > TABLE_SIZE_Y - 1)){
                     if (!(table[currentPosX+neededPosX][currentPosY+neededPosY] == -1)){
-                        Logger.debug("Az aktuális játékállás még nem végállapot.");
-                        return false;
+                        if (!(table[currentPosX+neededPosX][currentPosY+neededPosY] == 1)){
+                            if (!(table[currentPosX+neededPosX][currentPosY+neededPosY] == 2)){
+                                Logger.debug("Az aktuális játékállás még nem végállapot.");
+                                return false;
+                            }
+                        }
                     }
                 }
             }

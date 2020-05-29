@@ -154,17 +154,21 @@ public class GameH {
             if (!(currentPosX + neededPosX < 0 || currentPosX + neededPosX > TABLE_SIZE_X - 1)){
                 if (!(currentPosY + neededPosY < 0 || currentPosY + neededPosY > TABLE_SIZE_Y - 1)){
                     if (!(table[currentPosX+neededPosX][currentPosY+neededPosY] == -1)){
-                        currentPosX = (int) getEnemysPosition().getKey();
-                        currentPosY = (int) getEnemysPosition().getValue();
+                        if (!(table[currentPosX+neededPosX][currentPosY+neededPosY] == 2)){
+                            currentPosX = (int) getEnemysPosition().getKey();
+                            currentPosY = (int) getEnemysPosition().getValue();
 
-                        for (int j = 1; j <= 8; ++j){
-                            neededPosX = (int) directionToPairs(j).getKey();
-                            neededPosY = (int) directionToPairs(j).getValue();
+                            for (int j = 1; j <= 8; ++j){
+                                neededPosX = (int) directionToPairs(j).getKey();
+                                neededPosY = (int) directionToPairs(j).getValue();
 
-                            if (!(currentPosX + neededPosX < 0 || currentPosX + neededPosX > TABLE_SIZE_X - 1)){
-                                if (!(currentPosY + neededPosY < 0 || currentPosY + neededPosY > TABLE_SIZE_Y - 1)){
-                                    if (!(table[currentPosX+neededPosX][currentPosY+neededPosY] == -1)){
-                                        return false;
+                                if (!(currentPosX + neededPosX < 0 || currentPosX + neededPosX > TABLE_SIZE_X - 1)){
+                                    if (!(currentPosY + neededPosY < 0 || currentPosY + neededPosY > TABLE_SIZE_Y - 1)){
+                                        if (!(table[currentPosX+neededPosX][currentPosY+neededPosY] == -1)){
+                                            if (!(table[currentPosX+neededPosX][currentPosY+neededPosY] == 1)){
+                                                return false;
+                                            }
+                                        }
                                     }
                                 }
                             }
